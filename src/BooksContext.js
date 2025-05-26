@@ -1,19 +1,20 @@
-  import React, {useState, useEffect, createContext, Children} from "react";
+import React, { useState, useEffect, createContext } from "react";
 
-  export const BooksCintext  = createContext();
+export const BooksContext = createContext();
 
-  export const BookProvider =  ({children}) => {
-    const [books, setBooks] = useState([])
+export const BookProvider = ({ children }) => {
+  const [books, setBooks] = useState([]);
 
+  useEffect(() => {
+    fetch("/books.json")
+      .then(response => response.json())
+      .then(data => setBooks(data))
+      .catch(err => console.error("Error fetching books:", err));
+  }, []);
 
-      useEffect(() => {
-
-        fetch("/books.json").then(response)
-      },[]);
-
-      return(
-        <BookProvider.Provider value={books}>{children}</BookProvider.Provider>
-      );
-
-  }
-
+  return (
+    <BooksContext.Provider value={books}>
+      {children}
+    </BooksContext.Provider>
+  );
+};
